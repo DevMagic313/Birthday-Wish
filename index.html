@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magical Birthday Card ✨</title>
+    <link rel="shortcut icon" href="devmagic.jpg" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Parisienne&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --pink: #ffb6c1;
+            --lavender: #e6e6fa;
+            --gold: #fffacd;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--pink), var(--lavender));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Parisienne', cursive;
+            overflow: hidden;
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.5s;
+            transform-style: preserve-3d;
+        }
+
+        .envelope.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card {
+            display: none;
+            position: relative;
+            max-width: 600px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(255, 182, 193, 0.4);
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #e75480;
+            text-shadow: 0 0 15px var(--pink);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        .polaroid {
+            width: 250px;
+            padding: 15px;
+            background: white;
+            transform: rotate(3deg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin: 1rem auto;
+        }
+
+        .message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #6a4c93;
+            min-height: 100px;
+            border-left: 3px solid var(--pink);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+
+        .surprise-btn {
+            background: linear-gradient(45deg, #ff69b4, #ff9ff3);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .music-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 10px var(--pink); }
+            100% { text-shadow: 0 0 20px var(--pink), 0 0 30px var(--pink); }
+        }
+
+        .sparkle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+        }
+
+        @media (max-width: 768px) {
+            .card { width: 90%; }
+            .title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="envelope" onclick="openCard()">
+        <!-- Envelope front/back design would go here -->
+         Happy Birthday To You 💖
+    </div>
+
+    <div class="card">
+        <h1 class="title">Happy Birthday Apun! 💖</h1>
+        
+        <div class="polaroid">
+            <img src="devmagic.jpg" alt="Our Memory" style="width:100%">
+        </div>
+
+        <div class="message" id="typedMessage"></div>
+
+        <button class="surprise-btn" onclick="revealSurprise()">Tap for a Surprise 🎀</button>
+        <div id="hiddenMessage" style="display:none; margin-top:1rem">
+            You're the sprinkles on my cupcake! 🧁✨
+        </div>
+
+        <div class="music-control" onclick="toggleMusic()">🎵</div>
+    </div>
+
+    <audio id="birthdayMusic" src="https://www.bensound.com/bensound-music/bensound-happybirthday.mp3"></audio>
+
+    <script>
+        // Card Reveal
+        function openCard() {
+            document.querySelector('.envelope').classList.add('flipped');
+            document.querySelector('.card').style.display = 'block';
+            startConfetti();
+            startTyping();
+            document.getElementById('birthdayMusic').play();
+        }
+
+        // Typing Effect
+        function startTyping() {
+            const message = "To my amazing best friend... 🌸 Every moment with you is magical! Wishing you the most wonderful year ahead filled with love, laughter, and endless joy! 🎉";
+            let i = 0;
+            const typing = setInterval(() => {
+                document.getElementById('typedMessage').textContent += message[i];
+                i++;
+                if(i >= message.length) clearInterval(typing);
+            }, 50);
+        }
+
+        // Confetti Effect
+        function startConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff69b4', '#ff9ff3', '#ffffff']
+            });
+            setInterval(() => confetti({ particleCount: 20, spread: 50 }), 3000);
+        }
+
+        // Surprise Reveal
+        function revealSurprise() {
+            document.getElementById('hiddenMessage').style.display = 'block';
+            startConfetti();
+        }
+
+        // Music Control
+        function toggleMusic() {
+            const music = document.getElementById('birthdayMusic');
+            music.paused ? music.play() : music.pause();
+        }
+
+        // Sparkle Effect
+        document.addEventListener('mousemove', (e) => {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.style.left = `${e.pageX}px`;
+            sparkle.style.top = `${e.pageY}px`;
+            document.body.appendChild(sparkle);
+            setTimeout(() => sparkle.remove(), 1000);
+        });
+    </script>
+</body>
+</html>
